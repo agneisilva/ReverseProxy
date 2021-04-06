@@ -1,0 +1,42 @@
+version: '2'
+services:
+  proxy:
+    build: ./
+    container_name: reverse_proxy
+    networks:
+      - bridge-network
+    ports:
+      - 80:80
+      - 443:443
+
+  app1:
+    image: nginx
+    container_name: app1
+    volumes:
+      - ./site1:/usr/share/nginx/html
+    networks:
+      - bridge-network
+    ports:
+      - "8001:80"
+
+  app2:
+    image: nginx
+    container_name: app2
+    volumes:
+      - ./site2:/usr/share/nginx/html
+    networks:
+      - bridge-network
+    ports:
+      - "8002:80"
+
+# networks:
+#   site1:
+#     external:
+#       name: site1_default
+#   site2:
+#     external:
+#       name: site2_default
+
+networks: 
+  bridge-network:
+    driver: bridge
